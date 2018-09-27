@@ -2,21 +2,18 @@ import gym
 import random
 import numpy as np
 import tflearn
-from tflearn.layers.core import input_data, dropout, fully_connected
-from tflearn.layers.estimator import regression
 from statistics import median, mean
-from collections import Counter
 
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.utils.np_utils import to_categorical
-env = gym.make("CartPole-v0")
+
+
+
+env = gym.make("CartPole-v1")
 env.reset()
 
-
-
-
-def initial_population(initial_games = 100000, goal_steps = 100, score_requirement = 90):
+def initial_population(initial_games = 10000, goal_steps = 500, score_requirement = 120):
 
     training_data = []
     scores = []
@@ -50,11 +47,9 @@ def initial_population(initial_games = 100000, goal_steps = 100, score_requireme
         scores.append(score)
     
     training_data_save = np.array(training_data)
-    np.save('cartpole-v0.npy',training_data_save)
+    #np.save('cartpole-v0.npy',training_data_save)
     
     print('Average accepted score:',mean(accepted_scores))
-    print('Median score for accepted scores:',median(accepted_scores))
-    print(Counter(accepted_scores))
     
     return np.array(training_data), labels
 
@@ -67,8 +62,9 @@ labels = to_categorical(labels, 2)
 model = Sequential()
 model.add(Dense(units = 128, input_dim = 4))
 model.add(Dense(units = 256, activation = 'relu'))
+model.add(Dense(units = 512, activation = 'relu'))
+model.add(Dense(units = 256, activation = 'relu'))
 model.add(Dense(units = 128, activation = 'relu'))
-model.add(Dense(units = 64, activation = 'relu'))
 model.add(Dense(units = 2, activation = 'softmax'))
     
 model.compile(loss='categorical_crossentropy',
@@ -77,4 +73,41 @@ model.compile(loss='categorical_crossentropy',
 
 model.fit(train_data, labels, epochs = 10)
 
-model.save("cartpole_model.h5")
+#model.save("cartpole_model.h5")
+
+
+###
+scores = []
+choices = []
+
+for each_game in range(10):
+    score = 0
+    game_memory = []
+    prev_obs = []
+    env.reset()
+    
+    for t in range(10000):
+        env.render()
+        
+        if len(prev_obs) == 0:
+            action = random.randrange(0, 2)
+        else:
+            action = np.argmax(model.predict(np.array([prev_obs])))
+        choices.append(action)
+        
+        new_obs , reward, done, info = env.step(action)
+        
+        prev_obs = new_obs
+        
+        game_memory.append([new_obs, action])
+        
+        score += reward
+        
+        if done:
+            break
+    scores.append(score)
+print("Avg:", mean(scores))
+
+
+
+
