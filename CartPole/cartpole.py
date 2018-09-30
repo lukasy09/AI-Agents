@@ -3,7 +3,7 @@
 import gym
 import numpy as np
 from statistics import mean
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense
 from keras.utils.np_utils import to_categorical
 
@@ -15,6 +15,20 @@ def create_environment():
     return env
 
 #Returns the data that we put into network
+    
+def random_games(env, n_games = 40, steps = 500):
+    
+    for i in range(0, n_games):
+        env.reset()
+        
+        for _ in range(steps):
+             env.render()
+             action = env.action_space.sample()
+             observation, reward, done, info = env.step(action)
+             
+             if done:
+                 break
+        
 def initial_population(env,initial_games = 10000, goal_steps = 500, score_requirement = 120):
 
     training_data = []
@@ -56,10 +70,6 @@ def initial_population(env,initial_games = 10000, goal_steps = 500, score_requir
     
     return np.array(training_data), labels
 
-env = create_environment()
-    
-train_data, labels = initial_population(env)
-labels = to_categorical(labels, 2)
 
 # Skeleton of the model
 def create_model():
@@ -76,13 +86,13 @@ def create_model():
               metrics=['accuracy'])
     return model
 
-model = create_model()
-model.fit(train_data, labels, epochs = 10)
+#model = create_model()
+#model.fit(train_data, labels, epochs = 10)
 
 #model.save("cartpole_model.h5")
 
 
-def play_games(env,model, n_games = 10, steps = 500):
+def play_games(env,model, n_games = 20, steps = 500):
     scores = []
     choices = []
 
@@ -114,4 +124,12 @@ def play_games(env,model, n_games = 10, steps = 500):
     scores.append(score)
     print("Avg:", mean(scores))
 
+
+
+env = create_environment()
+#random_games(env)   
+train_data, labels = initial_population(env)
+labels = to_categorical(labels, 2)
+
+model = load_model("cartpole_model.h5")
 play_games(env ,model)
