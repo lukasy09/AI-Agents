@@ -12,7 +12,9 @@
 <p>The agent's task is to navigate the object to the left or the right side keeping it vertically(maximal possible angle is 15 degrees)</p>
 
 <h3>The agent taking some random decisions(actions)</h3>
-<p align = "center" src = "/video/cartpole_random.gif"></p>
+<p align = "center" >
+	<img src = "/video/cartpole_random.gif"/>
+</p>
 
 <h3>The agent is trained and tries to keep taking good decisions</h3>
-<p align = "center" src = "/video/cartpole_trained.gif"></p>
+<p align = "center" > <img src = "/video/cartpole_trained.gif"/></p>
