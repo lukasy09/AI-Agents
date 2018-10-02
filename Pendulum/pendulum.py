@@ -27,7 +27,7 @@ def random_pendulum_movements(env, n_games = 10, steps = 500):
             if done:
                 break
 
-def create_data(env,initial_games = 5000, goal_steps = 500, score_requirement = -700):
+def create_data(env,initial_games = 10000, goal_steps = 600, score_requirement = -650):
 
     training_data = []
     scores = []
