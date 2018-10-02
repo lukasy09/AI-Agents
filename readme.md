@@ -26,13 +26,13 @@
 <p>The starting state is defined by 3 numbers - sine, cosine in range [-1, 1] and `theta dot` (dθ/dt - angular velicty [rad/s])</p>
 
 <h3>2.2.1 Untrained agent, doing random things</h3>
-<p>
+<p align = "center">
 	<img src = "/assets/pendulum_random.gif"/>
 </p>
 
 
 
 <h3>2.2.2 Trained agent, trying to do something reasonable</h3>
-<p>
+<p align = "center">
 	<img src = "/assets/pendulum_trained.gif"/>
 </p>
